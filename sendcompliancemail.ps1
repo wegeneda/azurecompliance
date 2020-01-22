@@ -65,8 +65,6 @@ function getOAuthToken {
     return $OAuthToken
 }
 
-$Recipient = "david.wegener@microsoft.com"
-
 # Connect to Azure
 #<- Authentication
 $connectionName = "AzureRunAsConnection"
@@ -126,9 +124,10 @@ foreach ($s in $allSubscriptions) {
     $subscriptionownername_org = $null
     $subscriptionownergid_org = Get-AzureRMRoleAssignment -RoleDefinitionName "owner" -IncludeClassicAdministrators  | Where RoleDefinitionName -like "owner"
      if ($subscriptionownergid_org) {
-        $subscriptionownergid_final = ($subscriptionownergid_org.DisplayName).Replace("@davidwegenersbit.onmicrosoft.com", "")
+        $subscriptionownergid_final = ($subscriptionownergid_org.DisplayName).Replace("@.onmicrosoft.com", "")
         $subscriptionownername_org = Get-AzureRmADUser -UserPrincipalName $subscriptionownergid_org.DisplayName
         $subscriptionownername_final = $subscriptionownername_org.DisplayName
+	$Recipient = (Get-AzureRmADUser -UserPrincipalName).UserPrincipalName
     } else {
         $subscriptionownergid_final = "n/a"
         $subscriptionownername_final = "n/a"
